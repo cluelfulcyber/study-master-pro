@@ -9,7 +9,9 @@ import { Brain, Sparkles, Loader2, LogOut, History, BookOpen, Zap, GraduationCap
 import StudySummary from "@/components/StudySummary";
 import Quiz from "@/components/Quiz";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { LimbusAvatar } from "@/components/LimbusAvatar";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
 type DifficultyLevel = "simple" | "normal" | "advanced";
@@ -17,6 +19,7 @@ type DifficultyLevel = "simple" | "normal" | "advanced";
 const Study = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t, language } = useLanguage();
   const [subject, setSubject] = useState("");
   const [difficulty, setDifficulty] = useState<DifficultyLevel>("normal");
   const [loading, setLoading] = useState(false);
@@ -54,8 +57,8 @@ const Study = () => {
     if (!subject.trim()) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Please enter a subject to study",
+        title: t("error"),
+        description: t("errorSubjectRequired"),
       });
       return;
     }
@@ -67,7 +70,7 @@ const Study = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke("generate-summary", {
-        body: { subject, difficulty },
+        body: { subject, difficulty, language },
       });
 
       if (error) throw error;
@@ -76,14 +79,14 @@ const Study = () => {
       setSessionId(data.sessionId);
 
       toast({
-        title: "Summary generated!",
-        description: "Your study material is ready. Take the quiz when you're ready.",
+        title: t("summaryGenerated"),
+        description: t("summaryGeneratedDesc"),
       });
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: error.message || "Failed to generate summary",
+        title: t("error"),
+        description: error.message || t("errorGenerating"),
       });
     } finally {
       setLoading(false);
@@ -117,14 +120,15 @@ const Study = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <LanguageToggle />
             <ThemeToggle />
             <Button variant="ghost" size="sm" onClick={() => navigate("/history")}>
               <History className="w-4 h-4 mr-2" />
-              History
+              {t("viewHistory")}
             </Button>
             <Button variant="ghost" size="sm" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
+              {t("signOut")}
             </Button>
           </div>
         </div>
@@ -137,7 +141,7 @@ const Study = () => {
             <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5 shadow-lg">
               <CardContent className="pt-8 pb-8">
                 <LimbusAvatar 
-                  message="Welcome to LimbusMentor! I am Limbus, the eternal scholar who traversed the boundaries of knowledge itself. Once a seeker lost between worlds, I discovered the power to distill infinite wisdom into comprehensible truths. Now, as your mentor, I channel this gift to illuminate your path through any subject, adapting to your pace and pushing you toward mastery."
+                  message={t("limbusGreeting")}
                 />
               </CardContent>
             </Card>
@@ -150,16 +154,16 @@ const Study = () => {
                     <div className="absolute inset-0 bg-white/20 animate-pulse" />
                   </div>
                 </div>
-                <CardTitle className="text-3xl md:text-4xl">What would you like to learn today?</CardTitle>
+                <CardTitle className="text-3xl md:text-4xl">{t("enterSubject")}</CardTitle>
                 <CardDescription className="text-base">
-                  Enter a subject and choose how Limbus should guide you
+                  {t("selectDifficulty")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-8 pt-8">
                 <div className="space-y-3">
-                  <label className="text-sm font-semibold text-foreground">Subject or Topic</label>
+                  <label className="text-sm font-semibold text-foreground">{t("enterSubject")}</label>
                   <Textarea
-                    placeholder="e.g., Heap memory in C, Photosynthesis, Quantum mechanics, French Revolution..."
+                    placeholder={t("enterSubjectPlaceholder")}
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     className="min-h-[120px] resize-none text-base border-2 focus:border-primary transition-colors"
@@ -167,7 +171,7 @@ const Study = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <label className="text-sm font-semibold text-foreground">Difficulty Level</label>
+                  <label className="text-sm font-semibold text-foreground">{t("selectDifficulty")}</label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <button
                       type="button"
@@ -185,9 +189,9 @@ const Study = () => {
                       )}>
                         <Sparkles className="w-5 h-5" />
                       </div>
-                      <h3 className="font-bold text-lg mb-2">Simple</h3>
+                      <h3 className="font-bold text-lg mb-2">{t("simple")}</h3>
                       <p className="text-sm text-muted-foreground">
-                        Easy to understand, beginner-friendly explanations
+                        {t("simpleDesc")}
                       </p>
                       {difficulty === "simple" && (
                         <div className="absolute top-3 right-3">
@@ -214,9 +218,9 @@ const Study = () => {
                       )}>
                         <GraduationCap className="w-5 h-5" />
                       </div>
-                      <h3 className="font-bold text-lg mb-2">Normal</h3>
+                      <h3 className="font-bold text-lg mb-2">{t("normal")}</h3>
                       <p className="text-sm text-muted-foreground">
-                        Balanced detail and depth for solid understanding
+                        {t("normalDesc")}
                       </p>
                       {difficulty === "normal" && (
                         <div className="absolute top-3 right-3">
@@ -268,12 +272,12 @@ const Study = () => {
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Limbus is preparing your study material...
+                        {t("generating")}
                       </>
                     ) : (
                       <>
                         <Sparkles className="mr-2 h-5 w-5" />
-                        Begin Learning with Limbus
+                        {t("generateSummary")}
                       </>
                     )}
                   </span>
@@ -297,6 +301,7 @@ const Study = () => {
           <Quiz
             sessionId={sessionId!}
             subject={subject}
+            language={language}
             onComplete={handleQuizComplete}
           />
         )}

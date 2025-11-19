@@ -19,10 +19,11 @@ interface QuizQuestion {
 interface QuizProps {
   sessionId: string;
   subject: string;
+  language?: string;
   onComplete: () => void;
 }
 
-const Quiz = ({ sessionId, subject, onComplete }: QuizProps) => {
+const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -40,7 +41,7 @@ const Quiz = ({ sessionId, subject, onComplete }: QuizProps) => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("generate-quiz", {
-        body: { subject, sessionId },
+        body: { subject, sessionId, language },
       });
 
       if (error) throw error;
