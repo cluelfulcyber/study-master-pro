@@ -49,10 +49,10 @@ serve(async (req) => {
       throw new Error("Unauthorized");
     }
 
-    // Generate summary using Lovable AI
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!lovableApiKey) {
-      throw new Error("LOVABLE_API_KEY not configured");
+    // Generate summary using OpenAI
+    const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
+    if (!openaiApiKey) {
+      throw new Error("OPENAI_API_KEY not configured");
     }
 
     const systemPrompt = `You are an expert educational assistant. Your task is to create comprehensive, well-structured study materials.
@@ -71,14 +71,14 @@ Format your response using Markdown with:
 
 Make it engaging, accurate, and easy to scan.`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${lovableApiKey}`,
+        "Authorization": `Bearer ${openaiApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -86,7 +86,7 @@ Make it engaging, accurate, and easy to scan.`;
           },
           {
             role: "user",
-            content: `Create a ${difficulty} level study summary for: ${subject}`,
+            content: `Create a ${difficulty} level study summary for: ${trimmedSubject}`,
           },
         ],
       }),
