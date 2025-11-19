@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { subject, sessionId } = await req.json();
+    const { subject, sessionId, language = "en" } = await req.json();
 
     if (!subject || !sessionId) {
       throw new Error("Subject and sessionId are required");
@@ -45,7 +45,11 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY not configured");
     }
 
-    const systemPrompt = `You are an expert quiz generator. Create 5 multiple-choice questions about the given subject.
+    const languageInstruction = language === "bg" 
+      ? "IMPORTANT: All questions, options, and explanations MUST be in Bulgarian language."
+      : "All content should be in English.";
+
+    const systemPrompt = `You are an expert quiz generator. ${languageInstruction} Create 5 multiple-choice questions about the given subject.
 
 CRITICAL: You MUST respond with ONLY valid JSON in this EXACT format:
 {

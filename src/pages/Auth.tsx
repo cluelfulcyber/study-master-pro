@@ -7,11 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, Loader2 } from "lucide-react";
+import { Brain, Loader2, X } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,13 +38,13 @@ const Auth = () => {
       if (error) throw error;
 
       toast({
-        title: "Success!",
-        description: "Your account has been created. You can now sign in.",
+        title: t("signUpSuccess"),
+        description: t("signUpSuccess"),
       });
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: t("error"),
         description: error.message,
       });
     } finally {
@@ -66,7 +68,7 @@ const Auth = () => {
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: t("error"),
         description: error.message,
       });
     } finally {
