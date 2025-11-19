@@ -11,13 +11,15 @@ interface StudySummaryProps {
 
 const StudySummary = ({ summary, onStartQuiz, onNewTopic }: StudySummaryProps) => {
   return (
-    <div className="space-y-6">
-      <Card className="shadow-xl border-border/50">
-        <CardHeader className="border-b border-border/50 bg-card/50">
+    <div className="space-y-6 max-w-5xl mx-auto">
+      <Card className="shadow-2xl border-border/50 backdrop-blur-sm bg-card/95">
+        <CardHeader className="border-b border-border/50 bg-gradient-to-br from-primary/5 to-accent/5 pb-6">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <CheckCircle2 className="w-6 h-6 text-primary" />
-              Study Material
+            <CardTitle className="text-3xl flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                <CheckCircle2 className="w-6 h-6 text-primary" />
+              </div>
+              Study Material from Limbus
             </CardTitle>
           </div>
         </CardHeader>
@@ -54,12 +56,15 @@ const StudySummary = ({ summary, onStartQuiz, onNewTopic }: StudySummaryProps) =
         </CardContent>
       </Card>
 
-      <div className="flex gap-4">
-        <Button onClick={onStartQuiz} className="flex-1 h-12" style={{ background: "var(--gradient-primary)" }}>
-          <Sparkles className="mr-2 h-5 w-5" />
-          Take Quiz on This Topic
+      <div className="flex gap-4 flex-col sm:flex-row">
+        <Button onClick={onStartQuiz} className="flex-1 h-14 text-base font-semibold relative overflow-hidden group" style={{ background: "var(--gradient-primary)" }}>
+          <span className="relative z-10 flex items-center justify-center">
+            <Sparkles className="mr-2 h-5 w-5" />
+            Take Limbus's Challenge
+          </span>
+          <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
         </Button>
-        <Button onClick={onNewTopic} variant="outline" className="flex-1 h-12">
+        <Button onClick={onNewTopic} variant="outline" className="flex-1 h-14 text-base font-semibold border-2 hover:border-primary">
           Study New Topic
         </Button>
       </div>

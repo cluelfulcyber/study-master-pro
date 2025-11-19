@@ -23,11 +23,15 @@ const Index = () => {
       {/* Header */}
       <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
-              <Brain className="w-5 h-5 text-primary-foreground" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center relative overflow-hidden" style={{ background: "var(--gradient-primary)" }}>
+              <Brain className="w-6 h-6 text-primary-foreground relative z-10" />
+              <div className="absolute inset-0 bg-white/20 animate-pulse" />
             </div>
-            <span className="font-bold text-xl">StudyAI</span>
+            <div>
+              <span className="font-bold text-xl block">LimbusMentor</span>
+              <span className="text-xs text-muted-foreground">Guided by Limbus</span>
+            </div>
           </div>
           <Button variant="outline" onClick={() => navigate("/auth")}>
             Sign In
@@ -44,15 +48,16 @@ const Index = () => {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-            Your Intelligent
+            Learn Beyond Limits
             <br />
             <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              Study Companion
+              With Limbus
             </span>
           </h1>
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Master any subject with personalized AI-generated summaries, adaptive difficulty levels, and intelligent quizzes that track your progress.
+            Guided by Limbus, the eternal scholar who crossed boundaries between worlds to master infinite knowledge. 
+            Now this timeless mentor adapts to your pace, transforming any subject into comprehensible wisdom.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -75,8 +80,8 @@ const Index = () => {
       {/* Features Grid */}
       <div className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Everything you need to excel</h2>
-          <p className="text-xl text-muted-foreground">Powerful features designed for modern learners</p>
+          <h2 className="text-4xl font-bold mb-4">Everything you need to transcend limits</h2>
+          <p className="text-xl text-muted-foreground">Limbus's gifts to accelerate your mastery</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">

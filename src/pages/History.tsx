@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, ArrowLeft, Calendar, TrendingUp, Award, Target } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -105,18 +106,25 @@ const History = () => {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--gradient-hero)" }}>
-      <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm sticky top-0 z-10">
+      <header className="border-b border-border/50 bg-card/95 backdrop-blur-md sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
-              <Brain className="w-5 h-5 text-primary-foreground" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center relative overflow-hidden" style={{ background: "var(--gradient-primary)" }}>
+              <Brain className="w-6 h-6 text-primary-foreground relative z-10" />
+              <div className="absolute inset-0 bg-white/20 animate-pulse" />
             </div>
-            <span className="font-bold text-xl">StudyAI</span>
+            <div>
+              <span className="font-bold text-xl block">LimbusMentor</span>
+              <span className="text-xs text-muted-foreground">Guided by Limbus</span>
+            </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => navigate("/study")}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Study
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button variant="ghost" size="sm" onClick={() => navigate("/study")}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Study
+            </Button>
+          </div>
         </div>
       </header>
 
