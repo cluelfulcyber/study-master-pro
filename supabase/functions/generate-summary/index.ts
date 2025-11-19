@@ -83,8 +83,7 @@ Make it engaging, accurate, and easy to scan.`;
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI Gateway error:", response.status, errorText);
+      console.error("AI Gateway error:", { status: response.status });
       throw new Error("Failed to generate summary");
     }
 
@@ -104,7 +103,7 @@ Make it engaging, accurate, and easy to scan.`;
       .single();
 
     if (dbError) {
-      console.error("Database error:", dbError);
+      console.error("Database operation failed:", { code: dbError.code, message: dbError.message });
       throw new Error("Failed to save session");
     }
 
@@ -118,7 +117,7 @@ Make it engaging, accurate, and easy to scan.`;
       }
     );
   } catch (error) {
-    console.error("Error in generate-summary:", error);
+    console.error("Error in generate-summary:", { message: error instanceof Error ? error.message : "Unknown error" });
     return new Response(
       JSON.stringify({
         error: error instanceof Error ? error.message : "Unknown error",
