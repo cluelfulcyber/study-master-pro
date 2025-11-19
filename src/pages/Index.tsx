@@ -1,12 +1,147 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Brain, Sparkles, BookOpen, TrendingUp, Award, ArrowRight } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkUser();
+  }, []);
+
+  const checkUser = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      navigate("/study");
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen" style={{ background: "var(--gradient-hero)" }}>
+      {/* Header */}
+      <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
+              <Brain className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <span className="font-bold text-xl">StudyAI</span>
+          </div>
+          <Button variant="outline" onClick={() => navigate("/auth")}>
+            Sign In
+          </Button>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-20 text-center">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary border border-primary/20">
+            <Sparkles className="w-4 h-4" />
+            <span className="text-sm font-medium">AI-Powered Learning Platform</span>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+            Your Intelligent
+            <br />
+            <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Study Companion
+            </span>
+          </h1>
+
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Master any subject with personalized AI-generated summaries, adaptive difficulty levels, and intelligent quizzes that track your progress.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Button
+              size="lg"
+              className="h-14 px-8 text-lg"
+              onClick={() => navigate("/auth")}
+              style={{ background: "var(--gradient-primary)" }}
+            >
+              Get Started Free
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <Button size="lg" variant="outline" className="h-14 px-8 text-lg">
+              Learn More
+            </Button>
+          </div>
+        </div>
       </div>
+
+      {/* Features Grid */}
+      <div className="container mx-auto px-4 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">Everything you need to excel</h2>
+          <p className="text-xl text-muted-foreground">Powerful features designed for modern learners</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="p-8 rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: "var(--gradient-primary)" }}>
+              <BookOpen className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <h3 className="text-xl font-semibold mb-3">Adaptive Learning</h3>
+            <p className="text-muted-foreground leading-relaxed">
+              Choose from Simple, Normal, or Advanced difficulty levels. Our AI adapts to your learning style and pace.
+            </p>
+          </div>
+
+          <div className="p-8 rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: "var(--gradient-primary)" }}>
+              <Sparkles className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <h3 className="text-xl font-semibold mb-3">AI-Generated Content</h3>
+            <p className="text-muted-foreground leading-relaxed">
+              Get comprehensive summaries and quizzes generated specifically for your chosen topics using advanced AI.
+            </p>
+          </div>
+
+          <div className="p-8 rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: "var(--gradient-primary)" }}>
+              <TrendingUp className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <h3 className="text-xl font-semibold mb-3">Progress Tracking</h3>
+            <p className="text-muted-foreground leading-relaxed">
+              Visualize your learning journey with detailed analytics, score tracking, and performance insights.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="container mx-auto px-4 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="relative overflow-hidden rounded-3xl p-12 text-center" style={{ background: "var(--gradient-primary)" }}>
+            <div className="relative z-10">
+              <Award className="w-16 h-16 mx-auto mb-6 text-primary-foreground" />
+              <h2 className="text-4xl font-bold mb-4 text-primary-foreground">Ready to transform your learning?</h2>
+              <p className="text-xl mb-8 text-primary-foreground/90">
+                Join thousands of students already improving their grades with StudyAI
+              </p>
+              <Button
+                size="lg"
+                variant="secondary"
+                className="h-14 px-8 text-lg"
+                onClick={() => navigate("/auth")}
+              >
+                Start Learning Now
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t border-border/50 bg-card/50 backdrop-blur-sm py-8">
+        <div className="container mx-auto px-4 text-center text-muted-foreground">
+          <p>&copy; 2024 StudyAI. Your intelligent study companion.</p>
+        </div>
+      </footer>
     </div>
   );
 };
