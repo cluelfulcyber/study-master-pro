@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface StudySummaryProps {
   summary: string;
@@ -10,6 +11,8 @@ interface StudySummaryProps {
 }
 
 const StudySummary = ({ summary, onStartQuiz, onNewTopic }: StudySummaryProps) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <Card className="shadow-2xl border-border/50 backdrop-blur-sm bg-card/95">
@@ -60,12 +63,12 @@ const StudySummary = ({ summary, onStartQuiz, onNewTopic }: StudySummaryProps) =
         <Button onClick={onStartQuiz} className="flex-1 h-14 text-base font-semibold relative overflow-hidden group" style={{ background: "var(--gradient-primary)" }}>
           <span className="relative z-10 flex items-center justify-center">
             <Sparkles className="mr-2 h-5 w-5" />
-            Take Limbus's Challenge
+            {t("startQuiz")}
           </span>
           <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
         </Button>
         <Button onClick={onNewTopic} variant="outline" className="flex-1 h-14 text-base font-semibold border-2 hover:border-primary">
-          Study New Topic
+          {t("newTopic")}
         </Button>
       </div>
     </div>

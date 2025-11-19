@@ -189,7 +189,7 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
                           <p className="font-semibold mb-3 text-base">{q.question}</p>
                           <div className="space-y-2 text-sm">
                             <p className={isCorrect ? "text-green-600 dark:text-green-400 font-medium" : "text-red-600 dark:text-red-400 font-medium"}>
-                              Your answer: {q.options[userAnswer]}
+                              {t("yourAnswer")} {q.options[userAnswer]}
                             </p>
                             {!isCorrect && (
                               <>
