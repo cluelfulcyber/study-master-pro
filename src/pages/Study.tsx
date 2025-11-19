@@ -247,9 +247,9 @@ const Study = () => {
                       )}>
                         <Zap className="w-5 h-5" />
                       </div>
-                      <h3 className="font-bold text-lg mb-2">Advanced</h3>
+                      <h3 className="font-bold text-lg mb-2">{t("advanced")}</h3>
                       <p className="text-sm text-muted-foreground">
-                        In-depth technical details for expert-level insight
+                        {t("advancedDesc")}
                       </p>
                       {difficulty === "advanced" && (
                         <div className="absolute top-3 right-3">

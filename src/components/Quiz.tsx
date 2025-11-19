@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, XCircle, Award } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface QuizQuestion {
   question: string;
@@ -25,6 +26,7 @@ interface QuizProps {
 
 const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -114,7 +116,7 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
           <CardContent className="py-16">
             <div className="flex flex-col items-center gap-4">
               <Loader2 className="w-16 h-16 animate-spin text-primary" />
-              <p className="text-muted-foreground text-lg">Limbus is crafting your challenge...</p>
+              <p className="text-muted-foreground text-lg">{t("limbusCrafting")}</p>
             </div>
           </CardContent>
         </Card>
@@ -140,8 +142,8 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
                 <div className="absolute inset-0 bg-white/20 animate-pulse" />
               </div>
             </div>
-            <CardTitle className="text-4xl mb-3">Challenge Complete!</CardTitle>
-            <p className="text-muted-foreground text-lg">Limbus evaluates your understanding</p>
+            <CardTitle className="text-4xl mb-3">{t("challengeComplete")}</CardTitle>
+            <p className="text-muted-foreground text-lg">{t("limbusEvaluates")}</p>
           </CardHeader>
           <CardContent className="pt-10 pb-10 space-y-8">
             <div className="text-center">
@@ -150,22 +152,22 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
                   {score.toFixed(0)}%
                 </span>
               </div>
-              <p className="text-2xl font-bold mb-3">Your Score</p>
+              <p className="text-2xl font-bold mb-3">{t("yourScore")}</p>
               <p className="text-muted-foreground text-lg">
-                You answered {correctCount} out of {questions.length} questions correctly
+                {t("answeredCorrectly", { correct: correctCount, total: questions.length })}
               </p>
             </div>
 
             <div className="space-y-4 pt-4 max-w-md mx-auto">
               <div className="flex justify-between text-base">
-                <span className="text-muted-foreground font-medium">Accuracy Rate</span>
+                <span className="text-muted-foreground font-medium">{t("accuracyRate")}</span>
                 <span className="font-bold text-lg">{score.toFixed(1)}%</span>
               </div>
               <Progress value={score} className="h-4" />
             </div>
 
             <div className="space-y-4 pt-6">
-              <h3 className="font-semibold text-xl text-center mb-6">Review Your Answers</h3>
+              <h3 className="font-semibold text-xl text-center mb-6">{t("reviewAnswers")}</h3>
               <div className="space-y-4 max-w-2xl mx-auto">
                 {questions.map((q, idx) => {
                   const userAnswer = answers[idx];
@@ -192,10 +194,10 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
                             {!isCorrect && (
                               <>
                                 <p className="text-green-600 dark:text-green-400 font-medium">
-                                  Correct answer: {q.options[q.correct]}
+                                  {t("correctAnswer")} {q.options[q.correct]}
                                 </p>
                                 <div className="mt-3 p-3 rounded-lg bg-muted/50 border border-border">
-                                  <p className="text-xs font-semibold text-primary mb-1">📚 Limbus explains:</p>
+                                  <p className="text-xs font-semibold text-primary mb-1">{t("limbusExplains")}</p>
                                   <p className="text-xs text-foreground/80 leading-relaxed">{q.explanation}</p>
                                 </div>
                               </>
@@ -211,7 +213,7 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
 
             <div className="flex gap-4 pt-6 max-w-md mx-auto">
               <Button onClick={onComplete} className="flex-1 h-14 text-base font-semibold relative overflow-hidden group" style={{ background: "var(--gradient-primary)" }}>
-                <span className="relative z-10">Continue Learning</span>
+                <span className="relative z-10">{t("continueLearning")}</span>
                 <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </Button>
             </div>
@@ -228,7 +230,7 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
       <Card className="shadow-2xl border-border/50 backdrop-blur-sm bg-card/95">
         <CardHeader className="border-b border-border/50 pb-6">
           <div className="flex items-center justify-between mb-4">
-            <CardTitle className="text-2xl md:text-3xl">Limbus's Challenge</CardTitle>
+            <CardTitle className="text-2xl md:text-3xl">{t("limbusChallenge")}</CardTitle>
             <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
               <span className="text-sm font-semibold text-primary">
                 {currentQuestion + 1} / {questions.length}
@@ -268,7 +270,7 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
             style={{ background: "var(--gradient-primary)" }}
           >
             <span className="relative z-10">
-              {currentQuestion < questions.length - 1 ? "Next Question" : "Complete Challenge"}
+              {currentQuestion < questions.length - 1 ? t("nextQuestion") : t("completeChallenge")}
             </span>
             <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </Button>
