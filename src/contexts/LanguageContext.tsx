@@ -102,7 +102,20 @@ const translations = {
     noQuiz: "No quiz taken",
     noHistory: "No study sessions yet",
     noHistoryDesc: "Start your learning journey by creating your first study session!",
-    startStudying: "Start Studying"
+    startStudying: "Start Studying",
+    studyHistory: "Study History",
+    sessionsCompleted: "Study sessions completed",
+    averageScore: "Average Score",
+    acrossAllQuizzes: "Across all quizzes",
+    testsCompleted: "Tests completed",
+    performanceOverview: "Performance Overview",
+    recentQuizScores: "Your recent quiz scores",
+    noQuizData: "No quiz data available yet. Take a quiz to see your performance!",
+    yourStudyJourney: "Your Study Journey",
+    learningSessionsAchievements: "All your learning sessions and achievements",
+    completedOn: "Completed on",
+    noQuizTaken: "No quiz taken",
+    noStudySessions: "No study sessions yet. Start learning to see your history!",
   },
   bg: {
     // Landing page
@@ -197,7 +210,20 @@ const translations = {
     noQuiz: "Няма направен тест",
     noHistory: "Все още няма учебни сесии",
     noHistoryDesc: "Започнете вашето образователно пътешествие, като създадете първата си учебна сесия!",
-    startStudying: "Започни да учиш"
+    startStudying: "Започни да учиш",
+    studyHistory: "История на ученето",
+    sessionsCompleted: "Завършени учебни сесии",
+    averageScore: "Среден резултат",
+    acrossAllQuizzes: "Във всички тестове",
+    testsCompleted: "Завършени тестове",
+    performanceOverview: "Преглед на представянето",
+    recentQuizScores: "Вашите последни резултати от тестове",
+    noQuizData: "Все още няма данни за тестове. Решете тест, за да видите представянето си!",
+    yourStudyJourney: "Вашето учебно пътешествие",
+    learningSessionsAchievements: "Всички ваши учебни сесии и постижения",
+    completedOn: "Завършено на",
+    noQuizTaken: "Няма взет тест",
+    noStudySessions: "Все още няма учебни сесии. Започнете да учите, за да видите историята си!",
   }
 };
 

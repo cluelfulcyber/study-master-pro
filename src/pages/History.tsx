@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, ArrowLeft, Calendar, TrendingUp, Award, Target } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface StudySession {
   id: string;
@@ -24,6 +26,7 @@ interface StudySession {
 
 const History = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [sessions, setSessions] = useState<StudySession[]>([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -104,6 +107,19 @@ const History = () => {
     }
   };
 
+  const getDifficultyLabel = (difficulty: string) => {
+    switch (difficulty) {
+      case "simple":
+        return t("simple");
+      case "normal":
+        return t("normal");
+      case "advanced":
+        return t("advanced");
+      default:
+        return difficulty;
+    }
+  };
+
   return (
     <div className="min-h-screen" style={{ background: "var(--gradient-hero)" }}>
       <header className="border-b border-border/50 bg-card/95 backdrop-blur-md sticky top-0 z-10">
@@ -114,15 +130,18 @@ const History = () => {
               <div className="absolute inset-0 bg-white/20 animate-pulse" />
             </div>
             <div>
-              <span className="font-bold text-xl block">LimbusMentor</span>
-              <span className="text-xs text-muted-foreground">Guided by Limbus</span>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                LimbusMentor
+              </h1>
+              <p className="text-xs text-muted-foreground">{t("studyHistory")}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <LanguageToggle />
             <ThemeToggle />
-            <Button variant="ghost" size="sm" onClick={() => navigate("/study")}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Study
+            <Button onClick={() => navigate("/study")} variant="outline" size="sm" className="gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              {t("backToStudy")}
             </Button>
           </div>
         </div>
@@ -130,43 +149,43 @@ const History = () => {
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Study History</h1>
-          <p className="text-muted-foreground">Track your progress and review past sessions</p>
+          <h1 className="text-4xl font-bold mb-2">{t("studyHistory")}</h1>
+          <p className="text-muted-foreground">{t("learningSessionsAchievements")}</p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalSessions}</div>
-              <p className="text-xs text-muted-foreground">Study sessions completed</p>
-            </CardContent>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t("totalSessions")}</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.totalSessions}</div>
+                <p className="text-xs text-muted-foreground">{t("sessionsCompleted")}</p>
+              </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average Score</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.averageScore.toFixed(1)}%</div>
-              <p className="text-xs text-muted-foreground">Across all quizzes</p>
-            </CardContent>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t("averageScore")}</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.averageScore.toFixed(1)}%</div>
+                <p className="text-xs text-muted-foreground">{t("acrossAllQuizzes")}</p>
+              </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Quizzes Taken</CardTitle>
-              <Award className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalQuizzes}</div>
-              <p className="text-xs text-muted-foreground">Tests completed</p>
-            </CardContent>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t("quizzesTaken")}</CardTitle>
+                <Award className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.totalQuizzes}</div>
+                <p className="text-xs text-muted-foreground">{t("testsCompleted")}</p>
+              </CardContent>
           </Card>
         </div>
 
@@ -174,8 +193,8 @@ const History = () => {
         {chartData.length > 0 && (
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle>Recent Quiz Scores</CardTitle>
-              <CardDescription>Your performance over the last 10 quizzes</CardDescription>
+              <CardTitle>{t("performanceOverview")}</CardTitle>
+              <CardDescription>{t("recentQuizScores")}</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -200,17 +219,20 @@ const History = () => {
         {/* Sessions List */}
         <Card>
           <CardHeader>
-            <CardTitle>All Sessions</CardTitle>
-            <CardDescription>Complete history of your study sessions</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              {t("yourStudyJourney")}
+            </CardTitle>
+            <CardDescription>{t("learningSessionsAchievements")}</CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="text-center py-12 text-muted-foreground">Loading history...</div>
+              <div className="text-center py-12 text-muted-foreground">{t("generating")}</div>
             ) : sessions.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">No study sessions yet</p>
+                <p className="text-muted-foreground mb-4">{t("noStudySessions")}</p>
                 <Button onClick={() => navigate("/study")} style={{ background: "var(--gradient-primary)" }}>
-                  Start Studying
+                  {t("startStudying")}
                 </Button>
               </div>
             ) : (
@@ -222,18 +244,18 @@ const History = () => {
                         <h3 className="font-semibold text-lg mb-1">{session.subject}</h3>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Calendar className="w-4 h-4" />
-                          {format(new Date(session.created_at), "MMM dd, yyyy 'at' HH:mm")}
+                          {t("completedOn")} {format(new Date(session.created_at), "MMM dd, yyyy 'at' HH:mm")}
                         </div>
                       </div>
                       <Badge variant="outline" className={getDifficultyColor(session.difficulty)}>
-                        {session.difficulty}
+                        {getDifficultyLabel(session.difficulty)}
                       </Badge>
                     </div>
 
-                    {session.quiz_results && session.quiz_results.length > 0 && (
+                    {session.quiz_results && session.quiz_results.length > 0 ? (
                       <div className="space-y-2">
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Quiz Score</span>
+                          <span className="text-muted-foreground">{t("score")}</span>
                           <span className="font-semibold">
                             {session.quiz_results[0].correct_answers} / {session.quiz_results[0].total_questions} (
                             {session.quiz_results[0].score_percentage.toFixed(1)}%)
@@ -241,6 +263,8 @@ const History = () => {
                         </div>
                         <Progress value={session.quiz_results[0].score_percentage} className="h-2" />
                       </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">{t("noQuizTaken")}</p>
                     )}
                   </div>
                 ))}

@@ -22,7 +22,7 @@ const StudySummary = ({ summary, onStartQuiz, onNewTopic }: StudySummaryProps) =
               <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
                 <CheckCircle2 className="w-6 h-6 text-primary" />
               </div>
-              Study Material from Limbus
+              {t("studyMaterial")}
             </CardTitle>
           </div>
         </CardHeader>
