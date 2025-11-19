@@ -13,6 +13,7 @@ interface QuizQuestion {
   question: string;
   options: string[];
   correct: number;
+  explanation: string;
 }
 
 interface QuizProps {
@@ -188,9 +189,15 @@ const Quiz = ({ sessionId, subject, onComplete }: QuizProps) => {
                               Your answer: {q.options[userAnswer]}
                             </p>
                             {!isCorrect && (
-                              <p className="text-green-600 dark:text-green-400 font-medium">
-                                Correct answer: {q.options[q.correct]}
-                              </p>
+                              <>
+                                <p className="text-green-600 dark:text-green-400 font-medium">
+                                  Correct answer: {q.options[q.correct]}
+                                </p>
+                                <div className="mt-3 p-3 rounded-lg bg-muted/50 border border-border">
+                                  <p className="text-xs font-semibold text-primary mb-1">📚 Limbus explains:</p>
+                                  <p className="text-xs text-foreground/80 leading-relaxed">{q.explanation}</p>
+                                </div>
+                              </>
                             )}
                           </div>
                         </div>

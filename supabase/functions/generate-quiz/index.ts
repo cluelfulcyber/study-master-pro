@@ -53,7 +53,8 @@ CRITICAL: You MUST respond with ONLY valid JSON in this EXACT format:
     {
       "question": "What is...",
       "options": ["Option A", "Option B", "Option C", "Option D"],
-      "correct": 0
+      "correct": 0,
+      "explanation": "A brief explanation of why the correct answer is right and why others are wrong"
     }
   ]
 }
@@ -62,6 +63,7 @@ Requirements:
 - Exactly 5 questions
 - Each question has exactly 4 options
 - "correct" is the index (0-3) of the correct answer
+- "explanation" must be a clear, concise explanation (2-3 sentences) that teaches the concept
 - Questions should test understanding, not just memorization
 - Options should be plausible but clearly distinct
 - NO additional text, NO markdown, ONLY the JSON object`;
@@ -111,7 +113,7 @@ Requirements:
       }
 
       questions.forEach((q, idx) => {
-        if (!q.question || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correct !== "number") {
+        if (!q.question || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correct !== "number" || !q.explanation) {
           throw new Error(`Invalid question format at index ${idx}`);
         }
       });
