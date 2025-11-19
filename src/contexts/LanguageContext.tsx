@@ -5,7 +5,7 @@ type Language = "en" | "bg";
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
 
 const translations = {
@@ -68,6 +68,22 @@ const translations = {
     summaryGenerated: "Summary generated!",
     summaryGeneratedDesc: "Your study material is ready. Take the quiz when you're ready.",
     errorGenerating: "Failed to generate summary",
+    studyMaterial: "Study Material from Limbus",
+    limbusChallenge: "Limbus's Challenge",
+    limbusCrafting: "Limbus is crafting your challenge...",
+    nextQuestion: "Next Question",
+    completeChallenge: "Complete Challenge",
+    challengeComplete: "Challenge Complete!",
+    limbusEvaluates: "Limbus evaluates your understanding",
+    yourScore: "Your Score",
+    answeredCorrectly: "You answered {correct} out of {total} questions correctly",
+    accuracyRate: "Accuracy Rate",
+    reviewAnswers: "Review Your Answers",
+    yourAnswer: "Your answer:",
+    correctAnswer: "Correct answer:",
+    explanation: "Explanation:",
+    limbusExplains: "📚 Limbus explains:",
+    continueLearning: "Continue Learning",
     
     // History page
     learningHistory: "Your Learning Journey",
@@ -147,6 +163,22 @@ const translations = {
     summaryGenerated: "Обобщението е генерирано!",
     summaryGeneratedDesc: "Вашият учебен материал е готов. Направете теста, когато сте готови.",
     errorGenerating: "Неуспешно генериране на обобщение",
+    studyMaterial: "Учебен материал от Лимбус",
+    limbusChallenge: "Предизвикателството на Лимбус",
+    limbusCrafting: "Лимбус създава вашето предизвикателство...",
+    nextQuestion: "Следващ въпрос",
+    completeChallenge: "Завърши предизвикателството",
+    challengeComplete: "Предизвикателството завършено!",
+    limbusEvaluates: "Лимбус оценява вашето разбиране",
+    yourScore: "Вашият резултат",
+    answeredCorrectly: "Отговорихте правилно на {correct} от {total} въпроса",
+    accuracyRate: "Процент на точност",
+    reviewAnswers: "Прегледайте вашите отговори",
+    yourAnswer: "Вашият отговор:",
+    correctAnswer: "Правилен отговор:",
+    explanation: "Обяснение:",
+    limbusExplains: "📚 Лимбус обяснява:",
+    continueLearning: "Продължи ученето",
     
     // History page
     learningHistory: "Вашето образователно пътешествие",
@@ -181,8 +213,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("language", language);
   }, [language]);
 
-  const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations.en] || key;
+  const t = (key: string, params?: Record<string, string | number>): string => {
+    let text = translations[language][key as keyof typeof translations.en] || key;
+    
+    // Replace placeholders like {correct} and {total}
+    if (params) {
+      Object.keys(params).forEach(param => {
+        text = text.replace(`{${param}}`, String(params[param]));
+      });
+    }
+    
+    return text;
   };
 
   return (
