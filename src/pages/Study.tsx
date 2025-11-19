@@ -9,6 +9,7 @@ import { Brain, Sparkles, Loader2, LogOut, History, BookOpen, Zap, GraduationCap
 import StudySummary from "@/components/StudySummary";
 import Quiz from "@/components/Quiz";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LimbusAvatar } from "@/components/LimbusAvatar";
 import { cn } from "@/lib/utils";
 
 type DifficultyLevel = "simple" | "normal" | "advanced";
@@ -132,23 +133,12 @@ const Study = () => {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {!summary ? (
           <div className="space-y-8">
-            {/* Lore Section */}
+            {/* Lore Section with Limbus Avatar */}
             <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center bg-primary/10 flex-shrink-0">
-                    <Brain className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg mb-2">Welcome to LimbusMentor</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Guided by Limbus, the eternal scholar who traversed the boundaries of knowledge itself. 
-                      Once a seeker lost between worlds, Limbus discovered the power to distill infinite wisdom 
-                      into comprehensible truths. Now, as your mentor, Limbus channels this gift to illuminate 
-                      your path through any subject, adapting to your pace and pushing you toward mastery.
-                    </p>
-                  </div>
-                </div>
+              <CardContent className="pt-8 pb-8">
+                <LimbusAvatar 
+                  message="Welcome to LimbusMentor! I am Limbus, the eternal scholar who traversed the boundaries of knowledge itself. Once a seeker lost between worlds, I discovered the power to distill infinite wisdom into comprehensible truths. Now, as your mentor, I channel this gift to illuminate your path through any subject, adapting to your pace and pushing you toward mastery."
+                />
               </CardContent>
             </Card>
 
