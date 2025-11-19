@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Brain, Sparkles, BookOpen, TrendingUp, Award, ArrowRight } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     checkUser();
@@ -33,9 +37,13 @@ const Index = () => {
               <span className="text-xs text-muted-foreground">Guided by Limbus</span>
             </div>
           </div>
-          <Button variant="outline" onClick={() => navigate("/auth")}>
-            Sign In
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LanguageToggle />
+            <Button variant="outline" onClick={() => navigate("/auth")}>
+              {t("signIn")}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -44,20 +52,19 @@ const Index = () => {
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary border border-primary/20">
             <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-medium">AI-Powered Learning Platform</span>
+            <span className="text-sm font-medium">{t("aiPowered")}</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-            Learn Beyond Limits
+            {t("heroTitle")}
             <br />
             <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              With Limbus
+              {t("heroSubtitle")}
             </span>
           </h1>
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Guided by Limbus, the eternal scholar who crossed boundaries between worlds to master infinite knowledge. 
-            Now this timeless mentor adapts to your pace, transforming any subject into comprehensible wisdom.
+            {t("heroDescription")}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -67,11 +74,11 @@ const Index = () => {
               onClick={() => navigate("/auth")}
               style={{ background: "var(--gradient-primary)" }}
             >
-              Get Started Free
+              {t("getStarted")}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button size="lg" variant="outline" className="h-14 px-8 text-lg">
-              Learn More
+              {t("learnMore")}
             </Button>
           </div>
         </div>
@@ -80,8 +87,8 @@ const Index = () => {
       {/* Features Grid */}
       <div className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Everything you need to transcend limits</h2>
-          <p className="text-xl text-muted-foreground">Limbus's gifts to accelerate your mastery</p>
+          <h2 className="text-4xl font-bold mb-4">{t("featuresTitle")}</h2>
+          <p className="text-xl text-muted-foreground">{t("featuresSubtitle")}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -89,9 +96,9 @@ const Index = () => {
             <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: "var(--gradient-primary)" }}>
               <BookOpen className="w-6 h-6 text-primary-foreground" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">Adaptive Learning</h3>
+            <h3 className="text-xl font-semibold mb-3">{t("adaptiveLearning")}</h3>
             <p className="text-muted-foreground leading-relaxed">
-              Choose from Simple, Normal, or Advanced difficulty levels. Our AI adapts to your learning style and pace.
+              {t("adaptiveDesc")}
             </p>
           </div>
 
@@ -99,9 +106,9 @@ const Index = () => {
             <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: "var(--gradient-primary)" }}>
               <Sparkles className="w-6 h-6 text-primary-foreground" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">AI-Generated Content</h3>
+            <h3 className="text-xl font-semibold mb-3">{t("comprehensiveTesting")}</h3>
             <p className="text-muted-foreground leading-relaxed">
-              Get comprehensive summaries and quizzes generated specifically for your chosen topics using advanced AI.
+              {t("comprehensiveDesc")}
             </p>
           </div>
 
@@ -109,9 +116,9 @@ const Index = () => {
             <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: "var(--gradient-primary)" }}>
               <TrendingUp className="w-6 h-6 text-primary-foreground" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">Progress Tracking</h3>
+            <h3 className="text-xl font-semibold mb-3">{t("progressTracking")}</h3>
             <p className="text-muted-foreground leading-relaxed">
-              Visualize your learning journey with detailed analytics, score tracking, and performance insights.
+              {t("progressDesc")}
             </p>
           </div>
         </div>
@@ -123,9 +130,9 @@ const Index = () => {
           <div className="relative overflow-hidden rounded-3xl p-12 text-center" style={{ background: "var(--gradient-primary)" }}>
             <div className="relative z-10">
               <Award className="w-16 h-16 mx-auto mb-6 text-primary-foreground" />
-              <h2 className="text-4xl font-bold mb-4 text-primary-foreground">Ready to transform your learning?</h2>
+              <h2 className="text-4xl font-bold mb-4 text-primary-foreground">{t("readyToStart")}</h2>
               <p className="text-xl mb-8 text-primary-foreground/90">
-                Join thousands of students already improving their grades with StudyAI
+                {t("readyDesc")}
               </p>
               <Button
                 size="lg"
@@ -133,7 +140,7 @@ const Index = () => {
                 className="h-14 px-8 text-lg"
                 onClick={() => navigate("/auth")}
               >
-                Start Learning Now
+                {t("getStarted")}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
@@ -144,7 +151,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border/50 bg-card/50 backdrop-blur-sm py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>&copy; 2024 StudyAI. Your intelligent study companion.</p>
+          <p>{t("copyright")}</p>
         </div>
       </footer>
     </div>
