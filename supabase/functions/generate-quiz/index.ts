@@ -94,8 +94,7 @@ Requirements:
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI Gateway error:", response.status, errorText);
+      console.error("AI Gateway error:", { status: response.status });
       throw new Error("Failed to generate quiz");
     }
 
@@ -122,7 +121,7 @@ Requirements:
         }
       });
     } catch (parseError) {
-      console.error("Failed to parse quiz JSON:", quizContent);
+      console.error("Failed to parse quiz JSON:", { error: parseError instanceof Error ? parseError.message : "Parse error" });
       throw new Error("Failed to parse quiz format");
     }
 
@@ -133,7 +132,7 @@ Requirements:
       }
     );
   } catch (error) {
-    console.error("Error in generate-quiz:", error);
+    console.error("Error in generate-quiz:", { message: error instanceof Error ? error.message : "Unknown error" });
     return new Response(
       JSON.stringify({
         error: error instanceof Error ? error.message : "Unknown error",
