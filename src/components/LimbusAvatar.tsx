@@ -1,4 +1,4 @@
-import { Brain } from "lucide-react";
+import limbusImage from "@/assets/limbus-mentor.jpg";
 
 interface LimbusAvatarProps {
   message: string;
@@ -10,11 +10,13 @@ export function LimbusAvatar({ message }: LimbusAvatarProps) {
       {/* Limbus Avatar */}
       <div className="relative flex-shrink-0">
         <div 
-          className="w-20 h-20 rounded-full flex items-center justify-center relative overflow-hidden shadow-lg border-4 border-primary/20" 
-          style={{ background: "var(--gradient-primary)" }}
+          className="w-20 h-20 rounded-full flex items-center justify-center relative overflow-hidden shadow-lg border-4 border-primary/20 bg-black" 
         >
-          <Brain className="w-10 h-10 text-primary-foreground relative z-10" />
-          <div className="absolute inset-0 bg-white/20 animate-pulse" />
+          <img 
+            src={limbusImage} 
+            alt="Limbus Mentor" 
+            className="w-full h-full object-cover"
+          />
         </div>
         {/* Small indicator dot */}
         <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-4 border-background" />
