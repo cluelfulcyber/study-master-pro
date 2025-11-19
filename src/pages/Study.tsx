@@ -13,6 +13,7 @@ import { LanguageToggle } from "@/components/LanguageToggle";
 import { LimbusAvatar } from "@/components/LimbusAvatar";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import { z } from "zod";
 
 type DifficultyLevel = "simple" | "normal" | "advanced";
 
@@ -54,11 +55,20 @@ const Study = () => {
   };
 
   const generateSummary = async () => {
-    if (!subject.trim()) {
+    // Validate subject input
+    const subjectSchema = z.string()
+      .trim()
+      .min(3, t("errorSubjectTooShort") || "Subject must be at least 3 characters")
+      .max(500, t("errorSubjectTooLong") || "Subject must be less than 500 characters")
+      .regex(/^[a-zA-Z0-9\s.,!?'\-—–()""''«»]*$/, t("errorSubjectInvalidChars") || "Subject contains invalid characters");
+
+    const validationResult = subjectSchema.safeParse(subject);
+    
+    if (!validationResult.success) {
       toast({
         variant: "destructive",
         title: t("error"),
-        description: t("errorSubjectRequired"),
+        description: validationResult.error.errors[0].message,
       });
       return;
     }
