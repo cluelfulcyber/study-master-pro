@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, Sparkles, Loader2, LogOut, History, BookOpen } from "lucide-react";
+import { Brain, Sparkles, Loader2, LogOut, History, BookOpen, Zap, GraduationCap } from "lucide-react";
 import StudySummary from "@/components/StudySummary";
 import Quiz from "@/components/Quiz";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { cn } from "@/lib/utils";
 
 type DifficultyLevel = "simple" | "normal" | "advanced";
 
@@ -102,15 +103,20 @@ const Study = () => {
   return (
     <div className="min-h-screen" style={{ background: "var(--gradient-hero)" }}>
       {/* Header */}
-      <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm sticky top-0 z-10">
+      <header className="border-b border-border/50 bg-card/95 backdrop-blur-md sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
-              <Brain className="w-5 h-5 text-primary-foreground" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center relative overflow-hidden" style={{ background: "var(--gradient-primary)" }}>
+              <Brain className="w-6 h-6 text-primary-foreground relative z-10" />
+              <div className="absolute inset-0 bg-white/20 animate-pulse" />
             </div>
-            <span className="font-bold text-xl">StudyAI</span>
+            <div>
+              <span className="font-bold text-xl block">LimbusMentor</span>
+              <span className="text-xs text-muted-foreground">Guided by Limbus</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button variant="ghost" size="sm" onClick={() => navigate("/history")}>
               <History className="w-4 h-4 mr-2" />
               History
@@ -123,80 +129,171 @@ const Study = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
         {!summary ? (
-          <Card className="shadow-xl border-border/50">
-            <CardHeader className="text-center space-y-2 pb-6">
-              <div className="flex justify-center mb-2">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
-                  <BookOpen className="w-8 h-8 text-primary-foreground" />
+          <div className="space-y-8">
+            {/* Lore Section */}
+            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5 shadow-lg">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center bg-primary/10 flex-shrink-0">
+                    <Brain className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">Welcome to LimbusMentor</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Guided by Limbus, the eternal scholar who traversed the boundaries of knowledge itself. 
+                      Once a seeker lost between worlds, Limbus discovered the power to distill infinite wisdom 
+                      into comprehensible truths. Now, as your mentor, Limbus channels this gift to illuminate 
+                      your path through any subject, adapting to your pace and pushing you toward mastery.
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <CardTitle className="text-3xl">What would you like to learn today?</CardTitle>
-              <CardDescription className="text-base">
-                Enter a subject and select your preferred difficulty level
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Subject or Topic</label>
-                <Textarea
-                  placeholder="e.g., Heap memory in C, Photosynthesis, French Revolution..."
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="min-h-[100px] resize-none"
-                />
-              </div>
+              </CardContent>
+            </Card>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Difficulty Level</label>
-                <Select value={difficulty} onValueChange={(value: DifficultyLevel) => setDifficulty(value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="simple">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium">Simple</span>
-                        <span className="text-xs text-muted-foreground">Easy to understand, beginner-friendly</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="normal">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium">Normal</span>
-                        <span className="text-xs text-muted-foreground">Balanced detail and depth</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="advanced">
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium">Advanced</span>
-                        <span className="text-xs text-muted-foreground">In-depth technical details</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <Card className="shadow-2xl border-border/50 backdrop-blur-sm bg-card/95">
+              <CardHeader className="text-center space-y-4 pb-8 border-b border-border/50">
+                <div className="flex justify-center mb-2">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center relative overflow-hidden" style={{ background: "var(--gradient-primary)", boxShadow: "var(--shadow-glow)" }}>
+                    <BookOpen className="w-9 h-9 text-primary-foreground relative z-10" />
+                    <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                  </div>
+                </div>
+                <CardTitle className="text-3xl md:text-4xl">What would you like to learn today?</CardTitle>
+                <CardDescription className="text-base">
+                  Enter a subject and choose how Limbus should guide you
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-8 pt-8">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-foreground">Subject or Topic</label>
+                  <Textarea
+                    placeholder="e.g., Heap memory in C, Photosynthesis, Quantum mechanics, French Revolution..."
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    className="min-h-[120px] resize-none text-base border-2 focus:border-primary transition-colors"
+                  />
+                </div>
 
-              <Button
-                onClick={generateSummary}
-                disabled={loading}
-                className="w-full h-12 text-base"
-                style={{ background: loading ? undefined : "var(--gradient-primary)" }}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Generating your study material...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="mr-2 h-5 w-5" />
-                    Generate Study Material
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
+                <div className="space-y-4">
+                  <label className="text-sm font-semibold text-foreground">Difficulty Level</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setDifficulty("simple")}
+                      className={cn(
+                        "relative p-6 rounded-xl border-2 transition-all duration-300 text-left group hover:scale-105",
+                        difficulty === "simple"
+                          ? "border-primary bg-primary/10 shadow-lg"
+                          : "border-border hover:border-primary/50 bg-card"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-10 h-10 rounded-lg flex items-center justify-center mb-3 transition-colors",
+                        difficulty === "simple" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/20"
+                      )}>
+                        <Sparkles className="w-5 h-5" />
+                      </div>
+                      <h3 className="font-bold text-lg mb-2">Simple</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Easy to understand, beginner-friendly explanations
+                      </p>
+                      {difficulty === "simple" && (
+                        <div className="absolute top-3 right-3">
+                          <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                            <div className="w-2 h-2 rounded-full bg-primary-foreground" />
+                          </div>
+                        </div>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setDifficulty("normal")}
+                      className={cn(
+                        "relative p-6 rounded-xl border-2 transition-all duration-300 text-left group hover:scale-105",
+                        difficulty === "normal"
+                          ? "border-primary bg-primary/10 shadow-lg"
+                          : "border-border hover:border-primary/50 bg-card"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-10 h-10 rounded-lg flex items-center justify-center mb-3 transition-colors",
+                        difficulty === "normal" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/20"
+                      )}>
+                        <GraduationCap className="w-5 h-5" />
+                      </div>
+                      <h3 className="font-bold text-lg mb-2">Normal</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Balanced detail and depth for solid understanding
+                      </p>
+                      {difficulty === "normal" && (
+                        <div className="absolute top-3 right-3">
+                          <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                            <div className="w-2 h-2 rounded-full bg-primary-foreground" />
+                          </div>
+                        </div>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setDifficulty("advanced")}
+                      className={cn(
+                        "relative p-6 rounded-xl border-2 transition-all duration-300 text-left group hover:scale-105",
+                        difficulty === "advanced"
+                          ? "border-primary bg-primary/10 shadow-lg"
+                          : "border-border hover:border-primary/50 bg-card"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-10 h-10 rounded-lg flex items-center justify-center mb-3 transition-colors",
+                        difficulty === "advanced" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/20"
+                      )}>
+                        <Zap className="w-5 h-5" />
+                      </div>
+                      <h3 className="font-bold text-lg mb-2">Advanced</h3>
+                      <p className="text-sm text-muted-foreground">
+                        In-depth technical details for expert-level insight
+                      </p>
+                      {difficulty === "advanced" && (
+                        <div className="absolute top-3 right-3">
+                          <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                            <div className="w-2 h-2 rounded-full bg-primary-foreground" />
+                          </div>
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={generateSummary}
+                  disabled={loading}
+                  className="w-full h-14 text-base font-semibold relative overflow-hidden group"
+                  style={{ background: loading ? undefined : "var(--gradient-primary)" }}
+                >
+                  <span className="relative z-10 flex items-center justify-center">
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Limbus is preparing your study material...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="mr-2 h-5 w-5" />
+                        Begin Learning with Limbus
+                      </>
+                    )}
+                  </span>
+                  {!loading && (
+                    <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         ) : !showQuiz ? (
           <StudySummary
             summary={summary}
