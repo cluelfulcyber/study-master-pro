@@ -12,10 +12,20 @@ serve(async (req) => {
   }
 
   try {
-    const { subject, difficulty } = await req.json();
+    const { subject, difficulty, language = "en" } = await req.json();
 
     if (!subject || !difficulty) {
       throw new Error("Subject and difficulty are required");
+    }
+
+    // Validate subject input
+    const trimmedSubject = subject.trim();
+    if (trimmedSubject.length < 3 || trimmedSubject.length > 500) {
+      throw new Error("Subject must be between 3 and 500 characters");
+    }
+    
+    if (!/^[a-zA-Z0-9\s.,!?'\-—–()""''«»]*$/.test(trimmedSubject)) {
+      throw new Error("Subject contains invalid characters");
     }
 
     // Get auth token from request
