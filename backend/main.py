@@ -46,43 +46,41 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 # Auth endpoints
 @app.post("/auth/signup", response_model=schemas.AuthResponse)
 async def signup(user_data: schemas.UserSignup, db: Session = Depends(get_db)):
-    # Check if user exists
-    existing_user = db.query(models.User).filter(models.User.email == user_data.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    # Create user
-    hashed_password = get_password_hash(user_data.password)
-    user = models.User(
-        email=user_data.email,
-        hashed_password=hashed_password,
-        full_name=user_data.full_name
-    )
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    
-    # Create profile
-    profile = models.Profile(
-        id=user.id,
-        email=user.email,
-        full_name=user_data.full_name
-    )
-    db.add(profile)
-    db.commit()
-    
-    # Create token
-    access_token = create_access_token(data={"sub": str(user.id)})
-    
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user": {
-            "id": str(user.id),
-            "email": user.email,
-            "full_name": user.full_name
+    try:
+        # Check if user exists
+        existing_user = db.query(models.User).filter(models.User.email == user_data.email).first()
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        
+        # Create user
+        hashed_password = get_password_hash(user_data.password)
+        user = models.User(
+            email=user_data.email,
+            hashed_password=hashed_password,
+            full_name=user_data.full_name
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        
+        # Create token
+        access_token = create_access_token(data={"sub": str(user.id)})
+        
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user": {
+                "id": str(user.id),
+                "email": user.email,
+                "full_name": user.full_name
+            }
         }
-    }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        print(f"Signup error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Signup failed: {str(e)}")
 
 @app.post("/auth/login", response_model=schemas.AuthResponse)
 async def login(credentials: schemas.UserLogin, db: Session = Depends(get_db)):
