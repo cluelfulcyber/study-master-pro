@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Brain, Sparkles, BookOpen, TrendingUp, Award, ArrowRight } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -10,17 +10,13 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const Index = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { user } = useAuth();
 
   useEffect(() => {
-    checkUser();
-  }, []);
-
-  const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
+    if (user) {
       navigate("/study");
     }
-  };
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--gradient-hero)" }}>
