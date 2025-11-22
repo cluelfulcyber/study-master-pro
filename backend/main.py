@@ -20,13 +20,14 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="LimbusMentor API")
 
-# CORS
+# CORS - Allow all origins in development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080", "http://localhost:5173"],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 security = HTTPBearer()
