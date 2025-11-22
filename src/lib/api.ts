@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://study-master-pro-production.up.railway.app';
 
 interface AuthResponse {
   access_token: string;
