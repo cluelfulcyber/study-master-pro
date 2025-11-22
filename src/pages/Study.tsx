@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,36 +22,22 @@ const Study = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t, language } = useLanguage();
+  const { user, signOut } = useAuth();
   const [subject, setSubject] = useState("");
   const [difficulty, setDifficulty] = useState<DifficultyLevel>("normal");
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [showQuiz, setShowQuiz] = useState(false);
-  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/auth");
-      } else {
-        setUser(session.user);
-      }
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate("/auth");
-      } else {
-        setUser(session.user);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    if (!user) {
+      navigate("/auth");
+    }
+  }, [user, navigate]);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    await signOut();
     navigate("/");
   };
 
@@ -79,14 +66,10 @@ const Study = () => {
     setSessionId(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke("generate-summary", {
-        body: { subject, difficulty, language },
-      });
-
-      if (error) throw error;
-
+      const data = await api.generateSummary(subject, difficulty, language);
+      
       setSummary(data.summary);
-      setSessionId(data.sessionId);
+      setSessionId(data.session_id);
 
       toast({
         title: t("summaryGenerated"),

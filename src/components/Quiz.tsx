@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -42,12 +42,7 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
   const generateQuiz = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("generate-quiz", {
-        body: { subject, sessionId, language },
-      });
-
-      if (error) throw error;
-
+      const data = await api.generateQuiz(subject, sessionId, language);
       setQuestions(data.questions);
     } catch (error: any) {
       toast({
@@ -90,20 +85,12 @@ const Quiz = ({ sessionId, subject, language = "en", onComplete }: QuizProps) =>
     setShowResult(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not found");
-
-      const { error } = await supabase.from("quiz_results").insert([
-        {
-          user_id: user.id,
-          session_id: sessionId,
-          total_questions: questions.length,
-          correct_answers: correctAnswers,
-          score_percentage: scorePercentage,
-        },
-      ]);
-
-      if (error) throw error;
+      await api.saveQuizResult(
+        sessionId,
+        questions.length,
+        correctAnswers,
+        scorePercentage
+      );
     } catch (error) {
       console.error("Error saving quiz result:", error);
     }

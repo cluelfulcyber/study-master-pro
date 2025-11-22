@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, ArrowLeft, Calendar, TrendingUp, Award, Target } from "lucide-react";
@@ -12,22 +13,23 @@ import { Progress } from "@/components/ui/progress";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-interface StudySession {
+interface QuizResultData {
   id: string;
-  subject: string;
-  difficulty: string;
+  session_id: string;
+  total_questions: number;
+  correct_answers: number;
+  score_percentage: number;
+  time_taken_seconds?: number;
   created_at: string;
-  quiz_results?: {
-    score_percentage: number;
-    correct_answers: number;
-    total_questions: number;
-  }[];
+  subject?: string;
+  difficulty?: string;
 }
 
 const History = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const [sessions, setSessions] = useState<StudySession[]>([]);
+  const { user } = useAuth();
+  const [quizResults, setQuizResults] = useState<QuizResultData[]>([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalSessions: 0,
@@ -36,36 +38,19 @@ const History = () => {
   });
 
   useEffect(() => {
-    checkAuth();
-    fetchHistory();
-  }, []);
-
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!user) {
       navigate("/auth");
+      return;
     }
-  };
+    fetchHistory();
+  }, [user, navigate]);
 
   const fetchHistory = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("study_sessions")
-        .select(`
-          *,
-          quiz_results (
-            score_percentage,
-            correct_answers,
-            total_questions
-          )
-        `)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-
-      setSessions(data || []);
-      calculateStats(data || []);
+      const results = await api.getQuizResults();
+      setQuizResults(results);
+      calculateStats(results);
     } catch (error) {
       console.error("Error fetching history:", error);
     } finally {
@@ -73,25 +58,26 @@ const History = () => {
     }
   };
 
-  const calculateStats = (data: StudySession[]) => {
-    const totalSessions = data.length;
-    const sessionsWithQuizzes = data.filter((s) => s.quiz_results && s.quiz_results.length > 0);
-    const totalQuizzes = sessionsWithQuizzes.length;
+  const calculateStats = (data: QuizResultData[]) => {
+    // Get unique session IDs to count total sessions
+    const uniqueSessions = new Set(data.map(r => r.session_id));
+    const totalSessions = uniqueSessions.size;
+    const totalQuizzes = data.length;
     const averageScore =
       totalQuizzes > 0
-        ? sessionsWithQuizzes.reduce((acc, s) => acc + (s.quiz_results?.[0]?.score_percentage || 0), 0) / totalQuizzes
+        ? data.reduce((acc, r) => acc + r.score_percentage, 0) / totalQuizzes
         : 0;
 
     setStats({ totalSessions, averageScore, totalQuizzes });
   };
 
-  const chartData = sessions
-    .filter((s) => s.quiz_results && s.quiz_results.length > 0)
+  const chartData = quizResults
+    .filter((r) => r.subject)
     .slice(0, 10)
     .reverse()
-    .map((s) => ({
-      subject: s.subject.slice(0, 15) + (s.subject.length > 15 ? "..." : ""),
-      score: s.quiz_results?.[0]?.score_percentage || 0,
+    .map((r) => ({
+      subject: r.subject!.slice(0, 15) + (r.subject!.length > 15 ? "..." : ""),
+      score: r.score_percentage,
     }));
 
   const getDifficultyColor = (difficulty: string) => {
@@ -228,7 +214,7 @@ const History = () => {
           <CardContent>
             {loading ? (
               <div className="text-center py-12 text-muted-foreground">{t("generating")}</div>
-            ) : sessions.length === 0 ? (
+            ) : quizResults.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-muted-foreground mb-4">{t("noStudySessions")}</p>
                 <Button onClick={() => navigate("/study")} style={{ background: "var(--gradient-primary)" }}>
@@ -237,35 +223,33 @@ const History = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {sessions.map((session) => (
-                  <div key={session.id} className="p-4 rounded-lg border border-border bg-card/50 hover:bg-card transition-colors">
+                {quizResults.map((result) => (
+                  <div key={result.id} className="p-4 rounded-lg border border-border bg-card/50 hover:bg-card transition-colors">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-lg mb-1">{session.subject}</h3>
+                        <h3 className="font-semibold text-lg mb-1">{result.subject || t("unknownSubject")}</h3>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Calendar className="w-4 h-4" />
-                          {t("completedOn")} {format(new Date(session.created_at), "MMM dd, yyyy 'at' HH:mm")}
+                          {t("completedOn")} {format(new Date(result.created_at), "MMM dd, yyyy 'at' HH:mm")}
                         </div>
                       </div>
-                      <Badge variant="outline" className={getDifficultyColor(session.difficulty)}>
-                        {getDifficultyLabel(session.difficulty)}
-                      </Badge>
+                      {result.difficulty && (
+                        <Badge variant="outline" className={getDifficultyColor(result.difficulty)}>
+                          {getDifficultyLabel(result.difficulty)}
+                        </Badge>
+                      )}
                     </div>
 
-                    {session.quiz_results && session.quiz_results.length > 0 ? (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">{t("score")}</span>
-                          <span className="font-semibold">
-                            {session.quiz_results[0].correct_answers} / {session.quiz_results[0].total_questions} (
-                            {session.quiz_results[0].score_percentage.toFixed(1)}%)
-                          </span>
-                        </div>
-                        <Progress value={session.quiz_results[0].score_percentage} className="h-2" />
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{t("score")}</span>
+                        <span className="font-semibold">
+                          {result.correct_answers} / {result.total_questions} (
+                          {result.score_percentage.toFixed(1)}%)
+                        </span>
                       </div>
-                    ) : (
-                      <p className="text-sm text-muted-foreground italic">{t("noQuizTaken")}</p>
-                    )}
+                      <Progress value={result.score_percentage} className="h-2" />
+                    </div>
                   </div>
                 ))}
               </div>
