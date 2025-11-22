@@ -20,16 +20,21 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="LimbusMentor API")
 
-# CORS - Allow all origins in development
+# CORS - Explicitly allow frontend origins
+origins = [
+    "http://localhost:8080",
+    "http://localhost:5173",
+    "https://willowy-seahorse-43d846.netlify.app",
+    "https://9ab8bfe7-3a68-4de8-a15f-174db253dcad.lovableproject.com",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"],
 )
-
 security = HTTPBearer()
 
 # Auth dependency
