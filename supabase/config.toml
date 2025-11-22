@@ -1,1 +1,4 @@
 project_id = "wiyhiqgdlnrxfbrulahy"
+
+[functions.fastapi-proxy]
+verify_jwt = false
