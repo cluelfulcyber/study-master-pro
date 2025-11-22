@@ -93,7 +93,11 @@ Make it engaging, accurate, and easy to scan.`;
     });
 
     if (!response.ok) {
-      console.error("AI Gateway error:", { status: response.status });
+      const errorText = await response.text();
+      console.error("OpenAI API error:", { status: response.status, error: errorText });
+      if (response.status === 401) {
+        throw new Error("Invalid OpenAI API key. Please check your OPENAI_API_KEY configuration.");
+      }
       throw new Error("Failed to generate summary");
     }
 
