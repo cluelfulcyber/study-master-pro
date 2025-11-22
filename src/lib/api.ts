@@ -80,8 +80,11 @@ class ApiClient {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || 'Signup failed');
+      const error = await response.json().catch(() => ({}));
+      const errorMessage = typeof error.detail === 'string' 
+        ? error.detail 
+        : error.message || 'Signup failed. Please try again.';
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
@@ -97,8 +100,11 @@ class ApiClient {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || 'Login failed');
+      const error = await response.json().catch(() => ({}));
+      const errorMessage = typeof error.detail === 'string' 
+        ? error.detail 
+        : error.message || 'Login failed. Please check your credentials.';
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
